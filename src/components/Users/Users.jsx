@@ -1,46 +1,42 @@
 import React from "react";
+import userPhoto from "../../assets/img/user.png";
 import style from "./Users.module.css";
+import { NavLink } from "react-router-dom";
 
-let Users = props => {
-  if (props.users.length === 0) {
-    props.setUsers([
-      {
-        id: 1,
-        photoUrl:
-          "https://znaj.ua/crops/14d3ce/620x0/1/0/2018/09/18/uf4w6gv7HhvDpjwbVwOIUyEiUdsm0fIyDq3ngy5p.jpeg",
-        followed: true,
-        fullName: "Vitaliy",
-        status: "tough guy",
-        location: { city: "Kiyv", country: "Ukraine" }
-      },
-      {
-        id: 2,
-        photoUrl:
-          "https://i.pinimg.com/originals/b9/60/f8/b960f84ec0b6177ae5667b1fd3866631.jpg",
-        followed: true,
-        fullName: "Emmet",
-        status: "Doc",
-        location: { city: "Ukon", country: "USA" }
-      },
-      {
-        id: 3,
-        photoUrl:
-          "https://cdn.vox-cdn.com/thumbor/OAajq9dq9jiRv_KhqfmqqE8Yasc=/0x0:812x427/1200x800/filters:focal(262x97:390x225)/cdn.vox-cdn.com/uploads/chorus_image/image/60601373/Screen_Shot_2018_07_28_at_11.26.35_AM.0.png",
-        followed: false,
-        fullName: "Biff",
-        status: "Fool",
-        location: { city: "NY", country: "USA" }
-      }
-    ]);
+const Users = props => {
+  let pagesCount = Math.ceil(props.totalUsersCount / props.pageSize);
+
+  let pages = [];
+
+  for (let i = 1; i <= pagesCount; i++) {
+    pages.push(i);
   }
-
   return (
     <div>
+      <div>
+        {pages.map(p => {
+          return (
+            <span
+              className={props.currentPage === p && style.selectedPage}
+              onClick={e => {
+                props.onPageChanged(p);
+              }}
+            >
+              {p}
+            </span>
+          );
+        })}
+      </div>
       {props.users.map(u => (
         <div key={u.id}>
           <span>
             <div>
-              <img className={style.userPhoto} src={u.photoUrl} />
+              <NavLink to={"/profile/" + u.id}>
+                <img
+                  className={style.userPhoto}
+                  src={u.photos.small != null ? u.photos.small : userPhoto}
+                />
+              </NavLink>
             </div>
             <div>
               {u.followed ? (
@@ -64,12 +60,12 @@ let Users = props => {
           </span>
           <span>
             <span>
-              <div>{u.fullName}</div>
+              <div>{u.name}</div>
               <div>{u.status}</div>
             </span>
             <span>
-              <div>{u.location.country}</div>
-              <div>{u.location.city}</div>
+              <div>{"u.location.country"}</div>
+              <div>{"u.location.city"}</div>
             </span>
           </span>
         </div>
