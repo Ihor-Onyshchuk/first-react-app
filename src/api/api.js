@@ -16,11 +16,11 @@ export const usersAPI = {
   },
 
   follow(userId) {
-    return instance.post(`follow/${userId}`).then(response => response.data);
+    return instance.post(`follow/${userId}`);
   },
 
   unfollow(userId) {
-    return instance.delete(`follow/${userId}`).then(response => response.data);
+    return instance.delete(`follow/${userId}`);
   },
 
   getProfile(userId) {
