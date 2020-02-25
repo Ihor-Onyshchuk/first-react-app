@@ -1,42 +1,52 @@
-import React from 'react';
-import s from './MyPosts.module.css';
-import Post from './Posts/Post';
+import React from "react";
+import s from "./MyPosts.module.css";
+import Post from "./Posts/Post";
+import { Field, reduxForm } from "redux-form";
+import {
+  required,
+  maxLenght10,
+  maxLengthCreator
+} from "../../../utils/validators/validators";
+import { Textarea } from "../../common/formsControls/FormsControls";
 
+const MyPosts = props => {
+  let postsElements = props.posts.map(p => (
+    <Post message={p.message} likes={p.likesCount} />
+  ));
 
-
-const MyPosts = (props) => {
-  let postsElements = 
-      props.posts.map( p =>  <Post message={p.message} likes={p.likesCount}/>);
-
-  let newPostElement = React.createRef();
-
-  let onAddPost = () => {
-    props.addPost();
-  }
-
-  let onPostChange = () => {
-    let text = newPostElement.current.value;
-    props.updateNewPostText(text);
-
-  }
+  let addNewPost = values => {
+    props.addPost(values.newPostText);
+  };
 
   return (
     <div className={s.postsBlock}>
-        <h3>My posts</h3>
-      <div>
-        <div>
-          <textarea onChange={ onPostChange } ref={newPostElement} 
-                    value={props.newPostText}/>
-        </div>
-        <div>
-          <button onClick={ onAddPost }>AddPost</button>
-        </div>
-      </div>
-      <div className={s.posts}>
-        {postsElements}
-      </div>
+      <h3>My posts</h3>
+      <AddPostFormRedux onSubmit={addNewPost} />
+      <div className={s.posts}>{postsElements}</div>
     </div>
   );
-}
+};
 
+const maxLength10 = maxLengthCreator(10);
+
+const AddNewPostForm = props => {
+  return (
+    <form onSubmit={props.handleSubmit}>
+      <div>
+        <Field
+          component={Textarea}
+          name={"newPostText"}
+          validate={[required, maxLength10]}
+        />
+      </div>
+      <div>
+        <button>AddPost</button>
+      </div>
+    </form>
+  );
+};
+
+const AddPostFormRedux = reduxForm({ form: "ProfileAddNewPostForm" })(
+  AddNewPostForm
+);
 export default MyPosts;
