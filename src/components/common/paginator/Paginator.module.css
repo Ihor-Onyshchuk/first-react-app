@@ -15,4 +15,5 @@
 .pageNumber.selectedPage {
   font-weight: bold;
   border-color: black;
+  background-color: gray;
 }
