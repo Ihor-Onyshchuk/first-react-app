@@ -7,6 +7,7 @@ const Profile = props => {
     <div className="app-wrapper-content">
       <ProfileInfo
         savePhoto={props.savePhoto}
+        saveProfile={props.saveProfile}
         isOwner={props.isOwner}
         profile={props.profile}
         status={props.status}

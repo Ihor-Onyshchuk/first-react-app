@@ -5,7 +5,14 @@ import ProfileStatusWithHooks from "./ProfileStatusWithHooks";
 import userPhoto from "../../../assets/img/user.png";
 import ProfileDataForm from "./ProfileDataForm";
 
-const ProfileInfo = ({ profile, status, updateStatus, isOwner, savePhoto }) => {
+const ProfileInfo = ({
+  profile,
+  status,
+  updateStatus,
+  isOwner,
+  savePhoto,
+  saveProfile
+}) => {
   let [editMode, setEditMode] = useState(false);
 
   if (!profile) {
@@ -19,7 +26,9 @@ const ProfileInfo = ({ profile, status, updateStatus, isOwner, savePhoto }) => {
   };
 
   const onSubmit = formData => {
-    console.log(formData);
+    saveProfile(formData).then(() => {
+      setEditMode(false);
+    });
   };
 
   return (
@@ -28,7 +37,11 @@ const ProfileInfo = ({ profile, status, updateStatus, isOwner, savePhoto }) => {
         <img src={profile.photos.large || userPhoto} className={s.mainPhoto} />
         {isOwner && <input type={"file"} onChange={onMainPhotoSelected} />}
         {editMode ? (
-          <ProfileDataForm profile={profile} onSubmit={onSubmit} />
+          <ProfileDataForm
+            initialValues={profile}
+            profile={profile}
+            onSubmit={onSubmit}
+          />
         ) : (
           <ProfileData
             goToEditMode={() => {
@@ -53,13 +66,13 @@ const ProfileData = ({ profile, isOwner, goToEditMode }) => {
         </div>
       )}
       <div>
-        <b>Full name</b>: {profile.fullName ? "yes" : "no"}
+        <b>Full name</b>: {profile.fullName}
       </div>
       <div>
         <b>Looking for a job</b>: {profile.lookingForAJob ? "yes" : "no"}
       </div>
       <div>
-        <b>My Professinal skils</b>: {profile.lookingForAJobDescrition}
+        <b>My Professinal skils</b>: {profile.lookingForAJobDescription}
       </div>
       <div>
         <b>About Me</b>: {profile.aboutMe}
