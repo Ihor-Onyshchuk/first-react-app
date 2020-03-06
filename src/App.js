@@ -4,7 +4,7 @@ import Navbar from "./components/Navbar/Navbar";
 import News from "./components/News/News";
 import Music from "./components/Music/Music";
 import Settings from "./components/Settings/Settings";
-import { Route, withRouter } from "react-router-dom";
+import { Route, withRouter, Switch, Redirect } from "react-router-dom";
 import UsersContainer from "./components/Users/UsersContainer";
 import HeaderContainer from "./components/Header/HeaderContainer";
 import { connect } from "react-redux";
@@ -13,7 +13,7 @@ import { compose } from "redux";
 import { initializeApp } from "../src/redux/app-reducer";
 import Preloader from "./components/common/preloader/Preloader";
 import store from "./redux/redux-store";
-import { HashRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { withSuspense } from "./hoc/withSuspense";
 
@@ -39,16 +39,24 @@ class App extends React.Component {
         <HeaderContainer />
         <Navbar />
         <div className="app-wrapper-content">
-          <Route path="/dialogs" render={withSuspense(DialogsContainer)} />
-          <Route
-            path="/profile/:userId?"
-            render={withSuspense(ProfileContainer)}
-          />
-          <Route path="/users" render={() => <UsersContainer />} />
-          <Route path="/login" render={() => <Login />} />
-          <Route path="/news" render={News} />
-          <Route path="/music" render={Music} />
-          <Route path="/settings" render={Settings} />
+          <Switch>
+            <Route
+              path="/"
+              exact
+              render={() => <Redirect from="/" to="/profile" />}
+            />
+            <Route path="/dialogs" render={withSuspense(DialogsContainer)} />
+            <Route
+              path="/profile/:userId?"
+              render={withSuspense(ProfileContainer)}
+            />
+            <Route path="/users" render={() => <UsersContainer />} />
+            <Route path="/login" render={() => <Login />} />
+            <Route path="/news" render={News} />
+            <Route path="/music" render={Music} />
+            <Route path="/settings" render={Settings} />
+            <Route path="*" render={() => <div>404 NOT FOUND</div>} />
+          </Switch>
         </div>
       </div>
     );
@@ -66,11 +74,11 @@ let AppContainer = compose(
 
 const SamuraiJsApp = props => {
   return (
-    <HashRouter>
+    <BrowserRouter>
       <Provider store={store}>
         <AppContainer />
       </Provider>
-    </HashRouter>
+    </BrowserRouter>
   );
 };
 
